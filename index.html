@@ -613,7 +613,7 @@
 												<!--Send Message Script Start-->
 												<script>
 													async function sendFeedback() {
-														const apiKey = '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'
+														const apiKey = ${{ secret.PAT_KEY }}
 														const feedback = document.getElementById('feedback').value;
 														const name = document.getElementById('name').value;
 														const email = document.getElementById('email').value;
