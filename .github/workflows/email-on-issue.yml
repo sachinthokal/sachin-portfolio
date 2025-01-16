@@ -1,0 +1,28 @@
+name: Send Email on Issue Open
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Send Email with Elastic Email
+      uses: peter-evans/send-email@v2
+      with:
+        smtp-server: smtp.elasticemail.com
+        smtp-port: 2525
+        from: "sachinthokal1799@gmail.com"
+        to: "sachin.devops99@gmail.com"
+        subject: "New Issue Opened: #${{ github.event.issue.number }}"
+        body: |
+          A new issue has been opened in your repository.
+
+          **Title**: ${{ github.event.issue.title }}
+          **Description**: ${{ github.event.issue.body }}
+          **URL**: ${{ github.event.issue.html_url }}
+      env:
+        SMTP_USERNAME: "sachinthokal1799@gmail.com"   # Email address from Elastic Email
+        SMTP_PASSWORD: ${{ secrets.ELASTIC_API_KEY }}
