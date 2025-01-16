@@ -613,6 +613,7 @@
 												<!--Send Message Script Start-->
 												<script>
 													async function sendFeedback() {
+														const apiKey = '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'
 														const feedback = document.getElementById('feedback').value;
 														const name = document.getElementById('name').value;
 														const email = document.getElementById('email').value;
@@ -627,7 +628,7 @@
 															method: 'POST',
 															headers: {
 																'Content-Type': 'application/json',
-																'Authorization': 'Bearer `${{ secrets.PAT_KEY }}'
+    															'Authorization': `Bearer ${apiKey}`
 															},
 															body: JSON.stringify({
                     title: `${subject} - ${name}`,
