@@ -1,0 +1,15 @@
+name: Issue Created Trigger
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  process-issue:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Log the issue details
+        run: |
+          echo "Issue Title: ${{ github.event.issue.title }}"
+          echo "Issue Body: ${{ github.event.issue.body }}"
