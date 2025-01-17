@@ -612,29 +612,40 @@
 													role="button">submit</a>
 												<!--Send Message Script Start-->
 												<script>
-    document.getElementById('issueForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-
-        const name = document.getElementById('name').value;
-    	const email = document.getElementById('email').value;
-	const subject = document.getElementById('subject').value;
-        const feedback = document.getElementById('feedback').value;
-
-      const response = await fetch('https://api.github.com/repos/sachinthokal/sachin-portfolio/issues', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, subject, feedback }),
-      });
-
-      if (response.ok) {
-        alert('Issue created successfully!');
-      } else {
-        alert('Error creating issue');
-      }
-    });
-  </script>
+													function sendFeedback() {
+														const name = document.getElementById('name').value;
+														const email = document.getElementById('email').value;
+														const subject = document.getElementById('subject').value;
+														const feedback = document.getElementById('feedback').value;
+											
+														// Construct the payload to send
+														const issueData = {
+															title: subject,  // The 'subject' as the title of the issue
+															body: `Name: ${name}\nEmail: ${email}\nMessage: ${feedback}`, // Format the issue body
+														};
+											
+														// Send the data to the server or directly to GitHub API
+														fetch('https://api.github.com/repos/sachinthokal/sachin-portfolio/issues', {  // Replace this with your server endpoint or GitHub API
+															method: 'POST',
+															headers: {
+																'Content-Type': 'application/json',
+																// 'Authorization': `Bearer YOUR_GITHUB_TOKEN`, // GitHub token should not be in the frontend
+															},
+															body: JSON.stringify(issueData),
+														})
+														.then(response => {
+															if (response.ok) {
+																alert('Issue created successfully!');
+															} else {
+																alert('Error creating issue');
+															}
+														})
+														.catch(error => {
+															console.error('Error:', error);
+															alert('Error sending request');
+														});
+													}
+												</script>
 												<!--Send Message Script End-->
 											</div><!--/.single-single-contact-btn-->
 										</div><!--/.col-->
