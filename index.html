@@ -612,43 +612,30 @@
 													role="button">submit</a>
 												<!--Send Message Script Start-->
 												<script>
-													async function sendFeedback() {
-														const apiKey = ${{ secrets.PAT_KEY }} ;
-														const feedback = document.getElementById('feedback').value;
-														const name = document.getElementById('name').value;
-														const email = document.getElementById('email').value;
-														const subject = document.getElementById('subject').value;
+    document.getElementById('issueForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-														if (!feedback) {
-															alert('Please enter feedback before sending.');
-															return;
-														}
+        const name = document.getElementById('name').value;
+    	const email = document.getElementById('email').value;
+	const subject = document.getElementById('subject').value;
+        const feedback = document.getElementById('feedback').value;
 
-														const response = await fetch('https://api.github.com/repos/sachinthokal/sachin-portfolio/issues', {
-															method: 'POST',
-															headers: {
-																'Content-Type': 'application/json',
-    															'Authorization': `Bearer ${apiKey}`
-															},
-															body: JSON.stringify({
-                    title: `${subject} - ${name}`,
-                    body: `
-**User**: ${name}  
-**Email**: ${email}  
-**Subject**: ${subject}  
-**Feedback**: ${feedback}  
-                    `
-                })
-            });
-								
+      const response = await fetch('https://api.github.com/repos/sachinthokal/sachin-portfolio/issues', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, subject, feedback }),
+      });
 
-													if (response.ok) {
-														alert('Feedback sent successfully!');
-													} else {
-														alert('Failed to send feedback. Check your setup.');
-													}
-														}
-												</script> <!--Send Message Script End-->
+      if (response.ok) {
+        alert('Issue created successfully!');
+      } else {
+        alert('Error creating issue');
+      }
+    });
+  </script>
+												<!--Send Message Script End-->
 											</div><!--/.single-single-contact-btn-->
 										</div><!--/.col-->
 									</div><!--/.row-->
