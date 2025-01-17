@@ -1,44 +1,35 @@
 name: Create Issue from Form Submission
-# Name of the workflow, displayed in the GitHub Actions tab.
 
 on:
-  repository_dispatch:
-    types: [form-submission]
-    # This workflow is triggered by the `repository_dispatch` event.
-    # The event type "form-submission" is used to ensure it only runs for this specific custom event.
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Submitter name'
+        required: true
+      email:
+        description: 'Submitter email'
+        required: true
+      subject:
+        description: 'Issue subject'
+        required: true
+      feedback:
+        description: 'Feedback content'
+        required: true
 
 jobs:
   create_issue:
-    # Defines a single job named `create_issue`.
-
     runs-on: ubuntu-22.04
-    # Specifies the environment (Ubuntu 22.04) in which the job will run.
 
     steps:
-    - name: Create GitHub Issue
-      # Step name to create a GitHub issue.
-
+    - name: Create Issue
       uses: actions/github-script@v6
-      # Uses the `actions/github-script` action to execute custom JavaScript code within the workflow.
-
       with:
         script: |
-          // Get the event payload sent to this workflow.
-          const payload = context.payload;
-
-          // Extract the `title` and `body` properties from the `client_payload` object in the event payload.
-          // These values are expected to be passed from the `repository_dispatch` event.
-          const issueTitle = payload.client_payload.title;
-          const issueBody = payload.client_payload.body;
-
-          // Use the GitHub API to create a new issue in the repository.
-          const issue = await github.issues.create({
-            owner: context.repo.owner, // Owner of the repository.
-            repo: context.repo.repo,   // Name of the repository.
-            title: issueTitle,         // Title of the issue, passed from the event payload.
-            body: issueBody,           // Body of the issue, passed from the event payload.
+          const { name, email, subject, feedback } = github.context.payload.inputs;
+          const response = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: subject,
+            body: `**Name:** ${name}\n**Email:** ${email}\n\n**Feedback:**\n${feedback}`,
           });
-
-          // Set the created issue's URL as an output for this workflow.
-          core.setOutput('issue', issue.data.html_url);
-          // This makes the issue URL available as a workflow output, which can be used in other steps or logged.
+          core.setOutput('issue', response.data.html_url);
