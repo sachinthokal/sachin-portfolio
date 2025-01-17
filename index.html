@@ -608,44 +608,53 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="single-contact-btn">
-												<button type="button" onclick="triggerWorkflow()">Submit</button>
+												<button style="color: black;" type="submit">Submit</button>>
 											</form><!--/form-->
 												<!--Send Message Script Start-->
 												<script>
-													async function triggerWorkflow() {
-													  const name = document.getElementById("name").value;
-													  const email = document.getElementById("email").value;
-													  const subject = document.getElementById("subject").value;
-													  const message = document.getElementById("message").value;
-												  
-													  const token = "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"; // Replace with your GitHub PAT
-													  const repo = "sachinthokal/sachin-portfolio"; // Replace with your repo details
-												  
-													  const response = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/trigger-workflow.yml/dispatches`, {
-														method: "POST",
-														headers: {
-														  Authorization: `Bearer ${token}`,
-														  "Content-Type": "application/json",
-														},
-														body: JSON.stringify({
-														  ref: "main", // Replace with the branch name
-														  inputs: {
-															name,
-															email,
-															subject,
-															message,
+													document.getElementById('issueForm').addEventListener('submit', async function (e) {
+													  e.preventDefault();
+												
+													  const name = document.getElementById('name').value;
+													  const email = document.getElementById('email').value; 
+													  const subject = document.getElementById('subject').value;
+													  const feedback = document.getElementById('feedback').value;
+												
+													  const GITHUB_TOKEN = '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'; // Replace with your GitHub PAT
+													  const OWNER = 'sachinthokal'; // Replace with your GitHub username or org name
+													  const REPO = 'sachin-portfolio'; // Replace with your repository name
+												
+													  try {
+														const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/dispatches`, {
+														  method: 'POST',
+														  headers: {
+															'Authorization': `Bearer ${GITHUB_TOKEN}`,
+															'Accept': 'application/vnd.github.v3+json',
+															'Content-Type': 'application/json'
 														  },
-														}),
-													  });
-												  
-													  if (response.ok) {
-														alert("Workflow triggered successfully!");
-													  } else {
-														const error = await response.json();
-														console.error("Error:", error);
-														alert("Failed to trigger workflow.");
+														  body: JSON.stringify({
+															event_type: 'form-submission',
+															client_payload: {
+															
+																name: name,
+																email: email,	
+																subject: subject,
+															  	feedback: feedback
+															}
+														  })
+														});
+												
+														if (response.ok) {
+														  alert('Issue submitted successfully!');
+														} else {
+														  const errorData = await response.json();
+														  alert(`Error: ${errorData.message}`);
+														}
+													  } catch (error) {
+														console.error(error);
+														alert('An error occurred while submitting the issue.');
 													  }
-													}
+													});
 												  </script>
 												<!--Send Message Script End-->
 											</div><!--/.single-single-contact-btn-->
